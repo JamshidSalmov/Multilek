@@ -171,7 +171,7 @@ export default {
         finance_sum: null,
         first_name: "",
         full_name: "",
-        gender: "",
+        gender: null,
         ill_history: "",
         is_active: null,
         is_staff: null,

@@ -12,7 +12,7 @@
           responsive
           :sticky-header="true"
         >
-          <!-- <template #cell(actions)="data">
+          <template #cell(actions)="data">
             <router-link
               :to="{name: 'transaction-view', params: {id: data.item.id}}"
             >
@@ -20,7 +20,7 @@
                 <feather-icon icon="EyeIcon" />
               </b-button>
             </router-link>
-          </template> -->
+          </template>
         </b-table>
         <b-overlay :show="busy" no-wrap></b-overlay>
       </b-col>

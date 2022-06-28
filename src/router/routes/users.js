@@ -147,6 +147,24 @@ export default [
 
   // Diagnosis
   {
+    path: "/users/diagnosis/add",
+    name: "diagnos-add",
+    component: () => import("@/views/users/diagnosis/Add.vue"),
+    meta: {
+      pageTitle: "Add",
+      breadcrumb: [
+        {
+          text: "Diagnosis",
+          to: {name: "diagnosis"},
+        },
+        {
+          text: "Add",
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: "/users/diagnosis",
     name: "diagnosis",
     component: () => import("@/views/users/diagnosis/Diagnosis.vue"),
@@ -193,6 +211,24 @@ export default [
       ],
     },
   },
+  {
+    path: "/users/cards/:id/view",
+    name: "cards-view",
+    component: () => import("@/views/users/cards/View.vue"),
+    meta: {
+      pageTitle: "View",
+      breadcrumb: [
+        {
+          text: "Cards",
+          to: {name: "cards"},
+        },
+        {
+          text: "View",
+          active: true,
+        },
+      ],
+    },
+  },
   // Transactions
   {
     path: "/users/transactions",
@@ -203,6 +239,24 @@ export default [
       breadcrumb: [
         {
           text: "Transactions",
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: "/users/transactions:id/view",
+    name: "transactions-view",
+    component: () => import("@/views/users/transactions/View.vue"),
+    meta: {
+      pageTitle: "View",
+      breadcrumb: [
+        {
+          text: "Transactions",
+          to: {name: "transactions"},
+        },
+        {
+          text: "View",
           active: true,
         },
       ],

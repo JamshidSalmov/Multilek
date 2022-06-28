@@ -234,6 +234,7 @@ export default {
         )
         .then((res) => {
           this.order = res.data;
+          console.log('this.order',this.order)
         });
     },
   },

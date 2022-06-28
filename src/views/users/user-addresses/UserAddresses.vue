@@ -23,7 +23,6 @@
             {{ data.item.title }}
           </div>
         </template>
-
         <template #cell(actions)="data">
           <div class="boxx">
             <router-link
@@ -104,7 +103,7 @@ export default {
         },
         {
           key: "phone_number",
-          label: "Phone number",
+          label: "Phone",
         },
         {
           key: "address",

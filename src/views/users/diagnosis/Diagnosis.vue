@@ -139,6 +139,7 @@ export default {
         .get(`${this.$baseUrl}/dashboard/perception-dashboard/`, params)
         .then((res) => {
           this.totalItems = res.data.count;
+          console.log("res.data.count",res.data.count)
           this.busy = false;
           return res.data.results;
         });

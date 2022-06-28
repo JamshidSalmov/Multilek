@@ -1,6 +1,11 @@
 <template>
   <div class="orders">
     <b-row>
+      <!-- <router-link :to="{name: 'cards-view'}">
+            <b-button variant="success" class="btn-icon">
+              <feather-icon icon="EyeIcon" />
+            </b-button>
+      </router-link> -->
       <b-col cols="12">
         <b-table
           show-empty
@@ -12,6 +17,13 @@
           responsive
           :sticky-header="true"
         >
+        <template #cell(actions)="data">
+          <router-link :to="{name: 'cards-view', params: {id: data.item.id}}">
+            <b-button variant="success" class="btn-icon">
+              <feather-icon icon="EyeIcon" />
+            </b-button>
+          </router-link>
+        </template>
         </b-table>
         <b-overlay :show="busy" no-wrap></b-overlay>
       </b-col>

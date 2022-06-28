@@ -14,6 +14,8 @@
                 id="Phone_number"
                 placeholder="Phone number"
                 v-model="user.phone_number"
+                @input="changeInput"
+                maxlength="13"
               />
             </b-form-group>
           </b-col>
@@ -265,6 +267,7 @@ export default {
       
       user: {
         phone_number: "",
+        number:"",
         password: null,
         first_name: "",
         last_name: "",
@@ -291,6 +294,19 @@ export default {
         this.user.is_staff= false;
         this.user.gender = null;
     },
+    changeInput(){
+      var x = this.user.phone_number.replace(/\D/g, '').match(/(\d{0,2})(\d{0,3})(\d{0,4})/);
+      this.user.phone_number = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+      this.user.number="";
+      for(let i=0; i<this.user.phone_number.length; i++){
+        if(this.user.phone_number[i]!=="(" && this.user.phone_number[i] !==")" && this.user.phone_number[i]!=="-" && this.user.phone_number[i]!==" "){
+          this.user.number+=this.user.phone_number[i]
+        }
+      }
+      console.log("this.number=",this.user.number)
+      console.log("this.user.phone_number",this.user.phone_number)
+      console.log("this.user",this.user)
+    },
     async getData() {
     const access = localStorage.getItem("access");
       const params = {
@@ -305,6 +321,7 @@ export default {
         .then((res) => {
             console.log('Jamshid Qaraaa',res)
             this.user.phone_number = res.data.phone_number;
+            this.user.number = res.data.phone_number;
             this.user.first_name = res.data.first_name;
             this.user.last_name = res.data.last_name;
             this.user.birthday = res.data.birthday;
@@ -321,8 +338,7 @@ export default {
     },
     async changeUserItem() {
       const form = new FormData();
-      form.append("phone_number", this.user?.phone_number);
-      form.append("password", this.user?.password);
+      form.append("phone_number", this.user?.number);
       form.append("first_name", this.user?.first_name);
       form.append("last_name", this.user?.last_name);
       form.append("birthday", this.user?.birthday);
@@ -336,7 +352,7 @@ export default {
       form.append("is_superuser", this.user?.is_superuser);
       form.append("is_staff", this.user?.is_staff);
 
-    //   this.changePassword(),
+      this.changePassword(),
 
       console.log("this.userNeww",this.user)
       const access = localStorage.getItem("access");
@@ -379,48 +395,52 @@ export default {
         });
     },
 
-    // async changePassword() {
-    //   const form = new FormData();
-    //   console.log("Salom hammaga",form)
-    //   form.append("password", this.user?.password);
-    //   const access = localStorage.getItem("access");
-    //   const params = {
-    //     headers: {
-    //       "Accept-Language": "ru",
-    //       Authorization: `Bearer ${access}`,
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   };
-    //   await axios
-    //     .post(`${this.$baseUrl}/user/change-password/`, form, params)
-    //     .then((res) => {
-    //       console.log('Password Funktion')
-    //       this.$toast({
-    //         component: ToastificationContent,
-    //         position: "top-right",
-    //         props: {
-    //           title: "Pasword ham uzgartirildi!",
-    //           icon: "CheckCircleIcon",
-    //           variant: "success",
-    //         },
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       const errors = Object.values(err.response.data);
-    //       console.log(errors);
-    //       for (let index = 0; index < errors.length; index++) {
-    //         this.$toast({
-    //           component: ToastificationContent,
-    //           position: "top-right",
-    //           props: {
-    //             title: "Passwordni o'zgartirishda xato keldi! - " + errors[index],
-    //             icon: "CheckCircleIcon",
-    //             variant: "danger",
-    //           },
-    //         });
-    //       }
-    //     });
-    // },
+    async changePassword() {
+      const form = new FormData();
+      console.log("Salom hammaga",this.user.number)
+
+      form.append("phone_number", this.user?.number);
+
+      form.append("password", this.user?.password);
+
+      const access = localStorage.getItem("access");
+      const params = {
+        headers: {
+          "Accept-Language": "ru",
+          Authorization: `Bearer ${access}`,
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      await axios
+        .post(`${this.$baseUrl}/user/change-password/`, form, params)
+        .then((res) => {
+           console.log('Password Funktion',res)
+          this.$toast({
+            component: ToastificationContent,
+            position: "top-right",
+            props: {
+              title: "Pasword ham uzgartirildi!",
+              icon: "CheckCircleIcon",
+              variant: "success",
+            },
+          });
+        })
+        .catch((err) => {
+          const errors = Object.values(err.response.data);
+          console.log(errors);
+          for (let index = 0; index < errors.length; index++) {
+            this.$toast({
+              component: ToastificationContent,
+              position: "top-right",
+              props: {
+                title: "Passwordni o'zgartirishda xato keldi! - " + errors[index],
+                icon: "CheckCircleIcon",
+                variant: "danger",
+              },
+            });
+          }
+        });
+    },
 
   },
 };

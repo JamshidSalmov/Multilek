@@ -11,6 +11,8 @@
                 type="tel"
                 placeholder="Phone number"
                 v-model="user.phone_number"
+                @input="changeInput"
+                maxlength="13"
               />
             </b-form-group>
           </b-col>
@@ -57,7 +59,7 @@
             </b-form-group>
           </b-col>
           <!-- User Full Name -->
-          <b-col cols="12">
+          <!-- <b-col cols="12">
             <b-form-group label="Full Name" label-cols-md="4" label-for="full_name">
               <b-form-input
                 id="full_name"
@@ -65,7 +67,7 @@
                 v-model="user.full_name"
               />
             </b-form-group>
-          </b-col>
+          </b-col> -->
           <!-- Address -->
           <b-col cols="12">
             <b-form-group label="Address" label-cols-md="4" label-for="Address">
@@ -243,7 +245,7 @@ export default {
         first_name: "",
         last_name: "",
         birthday: null,
-        full_name: "",
+        number: "",
         address: null,
         gender: null,
         location: null,
@@ -257,26 +259,40 @@ export default {
     };
   },
   methods: {
+  changeInput(){
+      var x = this.user.phone_number.replace(/\D/g, '').match(/(\d{0,2})(\d{0,3})(\d{0,4})/);
+      this.user.phone_number = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+      this.user.number="";
+      for(let i=0; i<this.user.phone_number.length; i++){
+        if(this.user.phone_number[i]!=="(" && this.user.phone_number[i] !==")" && this.user.phone_number[i]!=="-" && this.user.phone_number[i]!==" "){
+          this.user.number+=this.user.phone_number[i]
+        }
+        
+      }
+      console.log("this.number=",this.user.number)
+      console.log("this.user.phone_number",this.user.phone_number)
+      console.log("this.user",this.user)
+
+    },
     reset_all(){
         this.user.is_active = false;
         this.user.is_superuser= false;
         this.user.is_staff= false;
         this.user.gender = null;
-        console.log('this.selectedGender',this.user.gender)
-        console.log('hammasi uchirilishi kerak',this.Genders);
+        
     },
     setGender(item) {
       this.user.gender = item;
     },
     async createUser() {
-      console.log('salom')
+      console.log("baxor keldi=",this.user.number)
       const form = new FormData();
-      form.append("phone_number", this.user?.phone_number);
+      form.append("phone_number", this.user?.number);
+      // form.append("phone_number", this.user?.phone_number);
       form.append("password", this.user?.password);
       form.append("first_name", this.user?.first_name);
       form.append("last_name", this.user?.last_name);
       form.append("birthday", this.user?.birthday);
-      form.append("full_name", this.user?.full_name);
       form.append("address", this.user?.address);
       form.append("gender", this.user?.gender);
       form.append("location", this.user?.location);
@@ -298,8 +314,6 @@ export default {
         .post(`${this.$baseUrl}/user/admin-user-create/`, form, params)
         .then((res) => {
           console.log('salom',res)
-          this.$router.push({name: "users"});
-
           this.$toast({
             component: ToastificationContent,
             position: "top-right",
@@ -309,6 +323,7 @@ export default {
               variant: "success",
             },
           });
+          this.$router.push({name: "users"});
         })
         .catch((err) => {
           const errors = Object.values(err.response.data);
